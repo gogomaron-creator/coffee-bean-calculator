@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f5f5">
+<title>コーヒー豆量計算</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;background:#f5f5f5;color:#222}
+main{max-width:520px;margin:0 auto;padding:24px 16px}
+.card{background:white;border:1px solid #ddd;border-radius:18px;padding:22px}
+h1{font-size:24px;margin:0 0 8px}.sub{color:#666;font-size:14px;margin-bottom:22px}
+label{display:block;font-weight:600;margin:18px 0 8px}
+input,select{width:100%;height:52px;border:1px solid #ccc;border-radius:12px;padding:0 14px;font-size:18px;background:#fff}
+.unit{display:flex;align-items:center;gap:10px}.unit input{flex:1}.unit span{font-weight:600}
+.result{margin-top:24px;background:#f1f1f1;border-radius:16px;padding:22px;text-align:center}
+.result-label{font-size:14px;color:#666}.grams{font-size:54px;font-weight:700;line-height:1.1;margin:5px 0}
+.g{font-size:18px;font-weight:600}.formula{margin-top:10px;color:#666;font-size:14px}
+.hint{margin-top:18px;font-size:13px;color:#666;line-height:1.6}
+.guide{margin-top:16px;border:1px solid #ddd;border-radius:14px;padding:15px;font-size:14px}
+.guide div{display:flex;justify-content:space-between;padding:5px 0}
+.error{color:#b00020;min-height:20px;margin-top:8px;font-size:13px}
+</style>
+</head>
+<body>
+<main><section class="card">
+<h1>☕ コーヒー豆量計算</h1>
+<div class="sub">お湯の量と濃さから、必要な豆の量を計算します。</div>
+<label for="water">入れる量（お湯）</label>
+<div class="unit"><input id="water" type="number" inputmode="decimal" min="50" max="3000" step="10" value="300"><span>ml</span></div>
+<label for="strength">濃さ</label>
+<select id="strength">
+<option value="17">薄め（1 : 17）</option>
+<option value="15" selected>普通（1 : 15）</option>
+<option value="14">やや濃い（1 : 14）</option>
+<option value="13">濃いめ（1 : 13）</option>
+<option value="12">かなり濃い（1 : 12）</option>
+</select>
+<div class="result">
+<div class="result-label">必要なコーヒー豆</div>
+<div class="grams" id="result">20.0</div><div class="g">g</div>
+<div class="formula" id="formula">お湯 300ml ÷ 15 = 20.0g</div>
+</div>
+<div class="error" id="error"></div>
+<div class="guide"><strong>濃さの目安</strong>
+<div><span>薄め</span><strong>1 : 17</strong></div>
+<div><span>普通</span><strong>1 : 15</strong></div>
+<div><span>やや濃い</span><strong>1 : 14</strong></div>
+<div><span>濃いめ</span><strong>1 : 13</strong></div>
+<div><span>かなり濃い</span><strong>1 : 12</strong></div>
+</div>
+<div class="hint">※豆の種類、挽き目、抽出方法によって適量は変わります。</div>
+</section></main>
+<script>
+const water=document.getElementById('water'), strength=document.getElementById('strength'), result=document.getElementById('result'), formula=document.getElementById('formula'), error=document.getElementById('error');
+function calculate(){
+ const ml=Number(water.value), ratio=Number(strength.value);
+ if(!Number.isFinite(ml)||ml<50||ml>3000){result.textContent='—';formula.textContent='お湯の量を50〜3000mlで入力してください';error.textContent='入力値を確認してください。';return;}
+ const grams=ml/ratio; result.textContent=grams.toFixed(1); formula.textContent=`お湯 ${ml}ml ÷ ${ratio} = ${grams.toFixed(1)}g`; error.textContent='';
+}
+water.addEventListener('input',calculate); strength.addEventListener('change',calculate); calculate();
+</script>
+</body></html>
